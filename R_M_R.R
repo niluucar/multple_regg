@@ -6,3 +6,5 @@ newproductNiluPau <- read_delim("NiluPau.csv",
 View(newproductNiluPau)
 
 ####MISSING VALUES####
+
+attributes(newproductNiluPau)
