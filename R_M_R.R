@@ -98,3 +98,4 @@ ExistingProdNiluPau$X1<-NULL
 
 ggplot(data = ExistingProdNiluPau,mapping = aes(x = Best_seller_rank,fill=Volume))+geom_histogram()+
   geom_text(stat="count",aes(label=..count..,y=..count..), vjust=10)
+####
