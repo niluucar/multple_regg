@@ -8,3 +8,5 @@ View(ExistingProdNiluPau)
 ####MISSING VALUES####
 
 attributes(ExistingProdNiluPau)
+
+str(ExistingProdNiluPau)
