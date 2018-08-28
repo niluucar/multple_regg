@@ -1,9 +1,10 @@
+library(ggplot2)
 setwd("C:/Users/pauve/Documents/UBIQUM/SCANS/PRACTICA6-NILUPAU/RSTUDIO")
 setwd("C:/Users/Lenovo/Desktop/Ubiqum_data/task_6/github_3")
 library(readr)
 ExistingProdNiluPau <- read_delim("NiluPau.csv", ";", 
-                      escape_double = FALSE, locale = locale(decimal_mark = ","), 
-                      trim_ws = TRUE)
+                                  escape_double = FALSE, locale = locale(decimal_mark = ","), 
+                                  trim_ws = TRUE)
 View(ExistingProdNiluPau)
 
 ####MISSING VALUES####
@@ -13,10 +14,48 @@ attributes(ExistingProdNiluPau)
 str(ExistingProdNiluPau)
 
 summary(ExistingProdNiluPau)
-####Added zeros as N/A ####
-ExistingProdNiluPau[is.na(ExistingProdNiluPau)] <- "0"
+
+####Changing n/a's in the WIDTH column median of the column
+####
+
+#According to the histogram of the width value. The distribution of this value does not have a normal distribution.
+#For this reason,We can mean value for changing the n/a values.
+#We will create a new column for this change. Then we will remove existing width column.
+
+ExistingProdNiluPau$Width_mean <- ifelse(is.na(ExistingProdNiluPau$Width), 
+                                         mean(ExistingProdNiluPau$Width, na.rm=TRUE),
+                                         ExistingProdNiluPau$Width)
+
+ExistingProdNiluPau$Width_mean <- round(ExistingProdNiluPau$Width_mean,digits = 2)
+
+#HISTOGRAM OF WÝDTH BEFORE DOING THE CHANGES
+ggplot(data=ExistingProdNiluPau, aes(x=ExistingProdNiluPau$Width)) + 
+  geom_histogram(bindwith=0.5, col="black",fill="lightgreen", alpha = .7)
+
+#HISTOGRAM OF WIDTH COLUMN BEFORE DOING THE CHANGES
+
+#After adding the maen value in the new column. We should check the histogram of this new column. 
+#The new distribution of the new weight column has the same distribution with the old one. 
+#Then we can use this new column in the model.
+ggplot(data=ExistingProdNiluPau, aes(x=ExistingProdNiluPau$Width_mean)) + 
+  geom_histogram(bindwith=0.5, col="black",fill="lightgreen", alpha = .7)
+
+####REMOVING THE COLUMNS####
+#Product id column values does not add  any meaning to the dataset or model. 
+#So,We should remove the product_id column.
+#best seller rank column has lost of missing values(n/a's). So, we should remove it.
+#It does not add any values to the model.#(We should check it also from other techniques.)
+#We will remove the X1 colums. This column includes the number of the rows. It does not make any sense for teh model.
+#We will remove the old widht column. Because we have the new one without any n/a values.
+ExistingProdNiluPau$Product_ID<-NULL
+ExistingProdNiluPau$Best_seller_rank<-NULL
+ExistingProdNiluPau$X1<-NULL
+ExistingProdNiluPau$Width<-NULL
+
+####Checking the n/a's in the data set####
+
 sum(is.na(ExistingProdNiluPau)) #total count of na's in the data set 
-sum(is.na(ExistingProdNiluPau$Best_seller_rank))
+
 
 ####Removing Outliers####
 
@@ -31,12 +70,13 @@ ExistingProdNiluPau = ExistingProdNiluPau[ExistingProdNiluPau$Volume <=6000,]
 #We should not use this variable into the model. This attributes are only Id numbers of products.
 #So,they will not make sense to use in the model.We should replace all romws of it null.
 
+####REMOVING THE COLUMNS####
 ExistingProdNiluPau$Product_ID<-NULL
 
+ExistingProdNiluPau$Best_seller_rank<-NULL
 
+ExistingProdNiluPau$X1<-NULL
 ####Graphs ####
 
 ggplot(data = ExistingProdNiluPau,mapping = aes(x = Best_seller_rank,fill=Volume))+geom_histogram()+
   geom_text(stat="count",aes(label=..count..,y=..count..), vjust=10)
-
-
