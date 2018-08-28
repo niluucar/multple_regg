@@ -4,3 +4,5 @@ library(readr)
 newproductNiluPau <- read_delim("newproductNiluPau.csv", 
                                 ";", escape_double = FALSE, trim_ws = TRUE)
 View(newproductNiluPau)
+
+####MISSING VALUES####
