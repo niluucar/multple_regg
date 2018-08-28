@@ -7,6 +7,24 @@ ExistingProdNiluPau <- read_delim("NiluPau.csv", ";",
                                   trim_ws = TRUE)
 View(ExistingProdNiluPau)
 
+####PRE-PROCESS####
+##Added zeros as N/A ##
+ExistingProdNiluPau[is.na(ExistingProdNiluPau)] <- "0"
+sum(is.na(ExistingProdNiluPau)) #total count of na's in the data set 
+
+####REMOVING THE COLUMNS####
+ExistingProdNiluPau$Product_ID<-NULL
+
+ExistingProdNiluPau$Best_seller_rank<-NULL
+
+ExistingProdNiluPau$X1<-NULL
+
+
+##remove repited warranties##
+warranty<- ExistingProdNiluPau[ExistingProdNiluPau$Product_type == "Extended Warranty",]
+View(warranty)
+warranty <- warranty[3:10,]
+mean(warranty$Prices)
 ####MISSING VALUES####
 
 attributes(ExistingProdNiluPau)
