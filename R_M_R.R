@@ -7,35 +7,27 @@ library(caret)
 setwd("C:/Users/pauve/Documents/UBIQUM/SCANS/PRACTICA6-NILUPAU/RSTUDIO")
 setwd("C:/Users/Lenovo/Desktop/Ubiqum_data/task_6/github_3")
 library(readr)
-library(dplyr)
 ExistingProdNiluPau <- read_delim("NiluPau.csv", ";", 
                                   escape_double = FALSE, locale = locale(decimal_mark = ","), 
                                   trim_ws = TRUE)
 View(ExistingProdNiluPau)
 str(ExistingProdNiluPau)
 
-
 ##remove repited warranties##
 warranty<- ExistingProdNiluPau[ExistingProdNiluPau$Product_type == "Extended Warranty",]
 View(warranty)
-warrantyrepeated <- warranty[3:10,]
-mean(warranty$Prices)
-meanwarrantygender
-mean.default(warrantyrepeated$Gender)
-meanwarrantyage
-mean.default(warrantyrepeated$Age)
-meanwarrantyinstore
-mean.default(warrantyrepeated$In_store)
 
+warrantyrepeated <- warranty[3:10,]
+meanwarrantygender<-mean.default(warrantyrepeated$Gender)
+meanwarrantyage<-mean.default(warrantyrepeated$Age)
+meanwarrantyinstore <-mean.default(warrantyrepeated$In_store)
 ExistingProdNiluPau$Prices[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarranty
 ExistingProdNiluPau$Gender[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantygender
 ExistingProdNiluPau$Age[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantyage
 ExistingProdNiluPau$In_store[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantyinstore
 ExistingProdNiluPau$Product_ID<-NULL
 ExistingProdNiluPau$X1<-NULL
-
 ExistingProdNiluPau$Best_seller_rank<-NULL
-
 ExistingProdNiluPau <- distinct(ExistingProdNiluPau,.keep_all = FALSE)
 
 ####MISSING VALUES####
@@ -82,7 +74,9 @@ ggplot(data=ExistingProdNiluPau, aes(x=ExistingProdNiluPau$Width_mean)) +
 #It does not add any values to the model.#(We should check it also from other techniques.)
 #We will remove the X1 colums. This column includes the number of the rows. It does not make any sense for teh model.
 #We will remove the old widht column. Because we have the new one without any n/a values.
+ExistingProdNiluPau$Product_ID<-NULL
 ExistingProdNiluPau$Best_seller_rank<-NULL
+ExistingProdNiluPau$X1<-NULL
 ExistingProdNiluPau$Width<-NULL
 ExistingProdNiluPau$Depth <- NULL
 
