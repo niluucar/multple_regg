@@ -1,4 +1,6 @@
 library(ggplot2)
+library(dplyr)
+
 setwd("C:/Users/pauve/Documents/UBIQUM/SCANS/PRACTICA6-NILUPAU/RSTUDIO")
 setwd("C:/Users/Lenovo/Desktop/Ubiqum_data/task_6/github_3")
 library(readr)
@@ -7,14 +9,24 @@ ExistingProdNiluPau <- read_delim("NiluPau.csv", ";",
                                   trim_ws = TRUE)
 View(ExistingProdNiluPau)
 str(ExistingProdNiluPau)
-#ExistingProdNiluPau = subset(ExistingProdNiluPau,ExistingProdNiluPau$Product_ID <133 &
-#                                    ExistingProdNiluPau$Product_ID >141)
-#install.packages("sqldf")
-#library(sqldf)
-#sqldf('SELECT DISTINCT * FROM ExistingProdNiluPau')
-#ExistingProdNiluPau$Product_ID<-NULL
-ExistingProdNiluPau[!duplicated(ExistingProdNiluPau), ]
-#
+
+##remove repited warranties##
+warranty<- ExistingProdNiluPau[ExistingProdNiluPau$Product_type == "Extended Warranty",]
+View(warranty)
+
+warrantyrepeated <- warranty[3:10,]
+meanwarrantygender<-mean.default(warrantyrepeated$Gender)
+meanwarrantyage<-mean.default(warrantyrepeated$Age)
+meanwarrantyinstore <-mean.default(warrantyrepeated$In_store)
+ExistingProdNiluPau$Prices[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarranty
+ExistingProdNiluPau$Gender[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantygender
+ExistingProdNiluPau$Age[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantyage
+ExistingProdNiluPau$In_store[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantyinstore
+ExistingProdNiluPau$Product_ID<-NULL
+ExistingProdNiluPau$X1<-NULL
+ExistingProdNiluPau$Best_seller_rank<-NULL
+ExistingProdNiluPau <- distinct(ExistingProdNiluPau,.keep_all = FALSE)
+
 ####MISSING VALUES####
 
 str(ExistingProdNiluPau)
@@ -37,9 +49,6 @@ ExistingProdNiluPau$Width_mean <- round(ExistingProdNiluPau$Width_mean,digits = 
 #### Removing columns, If volume < total of service reviews ####
 ExistingProdNiluPau$total_review <- ExistingProdNiluPau$Positive_service_review+
   ExistingProdNiluPau$Negative_service_review
-
-#if (ExistingProdNiluPau$total_review > ExistingProdNiluPau$Volume)
-# {  print ("Remove") } else { print("Keep")} 
 
 ExistingProdNiluPau = ExistingProdNiluPau[ExistingProdNiluPau$total_review <=ExistingProdNiluPau$Volume ,]
 
