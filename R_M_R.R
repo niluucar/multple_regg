@@ -1,5 +1,8 @@
+#### PACKAGES ####
+install.packages("caret", dependencies = c("Depends", "Suggests"))
 library(ggplot2)
 library(dplyr)
+library(caret)
 
 setwd("C:/Users/pauve/Documents/UBIQUM/SCANS/PRACTICA6-NILUPAU/RSTUDIO")
 setwd("C:/Users/Lenovo/Desktop/Ubiqum_data/task_6/github_3")
@@ -81,6 +84,7 @@ ggplot(data=ExistingProdNiluPau, aes(x=ExistingProdNiluPau$Width_mean)) +
 #We will remove the old widht column. Because we have the new one without any n/a values.
 ExistingProdNiluPau$Best_seller_rank<-NULL
 ExistingProdNiluPau$Width<-NULL
+ExistingProdNiluPau$Depth <- NULL
 
 ####Checking the n/a's in the data set####
 
@@ -100,13 +104,14 @@ ExistingProdNiluPau = ExistingProdNiluPau[ExistingProdNiluPau$Volume <=6000,]
 #We should not use this variable into the model. This attributes are only Id numbers of products.
 #So,they will not make sense to use in the model.We should replace all romws of it null.
 
-####REMOVING THE COLUMNS####
-ExistingProdNiluPau$Product_ID<-NULL
-
-ExistingProdNiluPau$Best_seller_rank<-NULL
-
-ExistingProdNiluPau$X1<-NULL
 ####Graphs ####
+#graphs for product_type vs. volume 
 
-ggplot(data = ExistingProdNiluPau,mapping = aes(x = Best_seller_rank,fill=Volume))+geom_histogram()+
-  geom_text(stat="count",aes(label=..count..,y=..count..), vjust=10)
+ggplot(data = ExistingProdNiluPau,mapping = aes(x =Product_type,y=Volume,fill=Product_type))+geom_bar(stat="identity")
+
+#### dummify the data####
+
+ExistingProdNiluPau2 <- dummyVars("~.", data = ExistingProdNiluPau)
+
+readyData <- data.frame(predict(ExistingProdNiluPau2, newdata = ExistingProdNiluPau))
+View(readyData)
