@@ -6,35 +6,22 @@ ExistingProdNiluPau <- read_delim("NiluPau.csv", ";",
                                   escape_double = FALSE, locale = locale(decimal_mark = ","), 
                                   trim_ws = TRUE)
 View(ExistingProdNiluPau)
-
-####PRE-PROCESS####
-##Added zeros as N/A ##
-ExistingProdNiluPau[is.na(ExistingProdNiluPau)] <- "0"
-sum(is.na(ExistingProdNiluPau)) #total count of na's in the data set 
-
-####REMOVING THE COLUMNS####
-ExistingProdNiluPau$Product_ID<-NULL
-
-ExistingProdNiluPau$Best_seller_rank<-NULL
-
-ExistingProdNiluPau$X1<-NULL
-
-
-##remove repited warranties##
-warranty<- ExistingProdNiluPau[ExistingProdNiluPau$Product_type == "Extended Warranty",]
-View(warranty)
-warranty <- warranty[3:10,]
-mean(warranty$Prices)
+str(ExistingProdNiluPau)
+#ExistingProdNiluPau = subset(ExistingProdNiluPau,ExistingProdNiluPau$Product_ID <133 &
+#                                    ExistingProdNiluPau$Product_ID >141)
+#install.packages("sqldf")
+#library(sqldf)
+#sqldf('SELECT DISTINCT * FROM ExistingProdNiluPau')
+#ExistingProdNiluPau$Product_ID<-NULL
+ExistingProdNiluPau[!duplicated(ExistingProdNiluPau), ]
+#
 ####MISSING VALUES####
-
-attributes(ExistingProdNiluPau)
 
 str(ExistingProdNiluPau)
 
 summary(ExistingProdNiluPau)
 
-####Changing n/a's in the WIDTH column median of the column
-####
+####Changing n/a's in the WIDTH column median of the column####
 
 #According to the histogram of the width value. The distribution of this value does not have a normal distribution.
 #For this reason,We can mean value for changing the n/a values.
@@ -45,6 +32,16 @@ ExistingProdNiluPau$Width_mean <- ifelse(is.na(ExistingProdNiluPau$Width),
                                          ExistingProdNiluPau$Width)
 
 ExistingProdNiluPau$Width_mean <- round(ExistingProdNiluPau$Width_mean,digits = 2)
+
+
+#### Removing columns, If volume < total of service reviews ####
+ExistingProdNiluPau$total_review <- ExistingProdNiluPau$Positive_service_review+
+  ExistingProdNiluPau$Negative_service_review
+
+#if (ExistingProdNiluPau$total_review > ExistingProdNiluPau$Volume)
+# {  print ("Remove") } else { print("Keep")} 
+
+ExistingProdNiluPau = ExistingProdNiluPau[ExistingProdNiluPau$total_review <=ExistingProdNiluPau$Volume ,]
 
 #HISTOGRAM OF WÝDTH BEFORE DOING THE CHANGES
 ggplot(data=ExistingProdNiluPau, aes(x=ExistingProdNiluPau$Width)) + 
@@ -98,4 +95,3 @@ ExistingProdNiluPau$X1<-NULL
 
 ggplot(data = ExistingProdNiluPau,mapping = aes(x = Best_seller_rank,fill=Volume))+geom_histogram()+
   geom_text(stat="count",aes(label=..count..,y=..count..), vjust=10)
-3333
