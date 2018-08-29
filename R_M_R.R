@@ -16,7 +16,6 @@ str(ExistingProdNiluPau)
 ##remove repited warranties##
 warranty<- ExistingProdNiluPau[ExistingProdNiluPau$Product_type == "Extended Warranty",]
 View(warranty)
-
 warrantyrepeated <- warranty[3:10,]
 meanwarrantygender<-mean.default(warrantyrepeated$Gender)
 meanwarrantyage<-mean.default(warrantyrepeated$Age)
@@ -27,6 +26,8 @@ ExistingProdNiluPau$Age[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=4
 ExistingProdNiluPau$In_store[ExistingProdNiluPau$X1 >=34 & ExistingProdNiluPau$X1 <=41] <- meanwarrantyinstore
 ExistingProdNiluPau$Product_ID<-NULL
 ExistingProdNiluPau$X1<-NULL
+ExistingProdNiluPau$Best_seller_rank<-NULL
+
 ExistingProdNiluPau$Best_seller_rank<-NULL
 ExistingProdNiluPau <- distinct(ExistingProdNiluPau,.keep_all = FALSE)
 
