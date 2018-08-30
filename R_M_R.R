@@ -110,3 +110,12 @@ ExistingProdNiluPau2 <- dummyVars("~.", data = ExistingProdNiluPau)
 
 readyData <- data.frame(predict(ExistingProdNiluPau2, newdata = ExistingProdNiluPau))
 View(readyData)
+
+corrData <- cor(readyData) 
+
+corrData
+install.packages("corrplot")
+
+library(corrplot)
+
+corrplot(corrData)
